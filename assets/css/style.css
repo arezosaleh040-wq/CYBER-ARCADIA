@@ -334,3 +334,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, #splash:focus-visibl
   }
   #bgCanvas { display:none; }
 }
+
+/* CYBER ARCADIA branded splash emblem */
+#splash .splash-logo{display:block;position:relative;z-index:1;width:min(86vw,540px);max-height:min(66vh,620px);height:auto;object-fit:contain;margin:0 auto 18px;filter:drop-shadow(0 0 22px rgba(0,190,255,.28));animation:splashLogoIn .9s cubic-bezier(.2,.9,.3,1.2) both}
+@keyframes splashLogoIn{from{opacity:0;transform:translateY(18px) scale(.9);filter:blur(8px)}to{opacity:1;transform:none;filter:drop-shadow(0 0 22px rgba(0,190,255,.28))}}
