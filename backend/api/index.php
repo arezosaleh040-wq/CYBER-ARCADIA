@@ -14,7 +14,7 @@ header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, X-CSRF-Token');
 if($_SERVER['REQUEST_METHOD']==='OPTIONS'){http_response_code(204);exit;}
 session_name((string)($config['app']['session_name']??'cyber_arcadia_session'));
-session_set_cookie_params(['lifetime'=>0,'path'=>'/','secure'=>(bool)($config['app']['secure_cookies']??true),'httponly'=>true,'samesite'=>'Lax']);
+session_set_cookie_params(['lifetime'=>0,'path'=>'/','secure'=>(bool)($config['app']['secure_cookies']??true),'httponly'=>true,'samesite'=>'None']);
 session_start();
 function out(int $code,array $data):never{http_response_code($code);echo json_encode($data,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES);exit;}
 function input():array{$v=json_decode(file_get_contents('php://input')?:'{}',true);return is_array($v)?$v:[];}
