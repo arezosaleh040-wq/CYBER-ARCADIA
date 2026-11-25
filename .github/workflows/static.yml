@@ -28,11 +28,18 @@ jobs:
         uses: actions/checkout@v4
       - name: Setup Pages
         uses: actions/configure-pages@v5
+      - name: Prepare and verify published site files
+        run: |
+          mkdir -p /tmp/pages-site
+          rsync -a --exclude='.git' --exclude='.github' --exclude='_site' ./ /tmp/pages-site/
+          test -f /tmp/pages-site/googlec9c63ee4851e8e16.html
+          test "$(cat /tmp/pages-site/googlec9c63ee4851e8e16.html)" = "google-site-verification: googlec9c63ee4851e8e16.html"
+          echo 'Google verification file is present in the Pages publish directory.'
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
           name: github-pages-${{ github.run_id }}-${{ github.run_attempt }}
-          path: '.'
+          path: '/tmp/pages-site'
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
