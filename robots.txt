@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://arezosaleh040-wq.github.io/CYBER-ARCADIA/sitemap.xml
