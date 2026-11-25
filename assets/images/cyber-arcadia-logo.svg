@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 900" role="img" aria-labelledby="title">
+<title id="title">CYBER ARCADIA</title>
+<defs>
+ <linearGradient id="ring" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#00f5ff"/><stop offset=".48" stop-color="#713bff"/><stop offset="1" stop-color="#ff28d7"/></linearGradient>
+ <linearGradient id="chrome" x1="0" y1="0" x2=".2" y2="1"><stop stop-color="#fff"/><stop offset=".28" stop-color="#9cecff"/><stop offset=".55" stop-color="#2868ff"/><stop offset=".8" stop-color="#101a4b"/><stop offset="1" stop-color="#d8faff"/></linearGradient>
+ <linearGradient id="pink" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffbaff"/><stop offset=".45" stop-color="#f000ff"/><stop offset="1" stop-color="#6122ff"/></linearGradient>
+ <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#fff6a0"/><stop offset=".5" stop-color="#ffad20"/><stop offset="1" stop-color="#8c3b00"/></linearGradient>
+ <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="9" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+ <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur in="SourceAlpha" stdDeviation="12"/><feOffset dy="8"/><feComponentTransfer><feFuncA type="linear" slope=".65"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<rect width="900" height="900" rx="70" fill="#030817"/>
+<path d="M80 230H190L230 190M820 230H710L670 190M80 670H190L230 710M820 670H710L670 710" fill="none" stroke="#183bff" stroke-width="5" opacity=".8"/>
+<g fill="none" stroke="url(#ring)" filter="url(#glow)"><circle cx="450" cy="450" r="365" stroke-width="9"/><circle cx="450" cy="450" r="345" stroke-width="3" stroke-dasharray="24 15"/><path d="M450 42V100M450 800V858M42 450H100M800 450H858" stroke-width="5"/></g>
+<g filter="url(#shadow)">
+ <path d="M315 215L335 104L400 163L450 35L500 163L565 104L585 215Z" fill="url(#gold)" stroke="#ffe7a0" stroke-width="9"/>
+ <path d="M335 195L400 163L450 220L500 163L565 195" fill="none" stroke="#fff2b0" stroke-width="8"/>
+ <path d="M450 78L468 129L450 153L432 129Z" fill="#00f5ff" stroke="#fff" stroke-width="5"/>
+</g>
+<g filter="url(#glow)" fill="#07132e" stroke="url(#ring)" stroke-width="12">
+ <path d="M248 280Q270 230 330 235H570Q630 230 652 280L710 470Q728 535 680 558Q640 577 604 540L550 490H350L296 540Q260 577 220 558Q172 535 190 470Z"/>
+</g>
+<g stroke="#00efff" stroke-width="17" stroke-linecap="round" filter="url(#glow)"><path d="M285 345V435M240 390H330"/></g>
+<g fill="#f000ff" filter="url(#glow)"><circle cx="605" cy="350" r="19"/><circle cx="650" cy="395" r="19"/><circle cx="560" cy="395" r="19"/><circle cx="605" cy="440" r="19"/></g>
+<g fill="none" stroke="#00dfff" stroke-width="13"><circle cx="390" cy="440" r="42"/><circle cx="510" cy="440" r="42"/></g>
+<path d="M365 290H535" stroke="#00dfff" stroke-width="8" stroke-linecap="round"/>
+<g text-anchor="middle" font-family="Arial,sans-serif" font-weight="900" filter="url(#shadow)">
+ <text x="450" y="650" font-size="132" letter-spacing="5" fill="url(#chrome)" stroke="#061c65" stroke-width="7" paint-order="stroke">CYBER</text>
+ <text x="450" y="765" font-size="116" letter-spacing="2" fill="url(#pink)" stroke="#24004f" stroke-width="8" paint-order="stroke">ARCADIA</text>
+</g>
+<circle cx="450" cy="825" r="54" fill="#07112c" stroke="url(#ring)" stroke-width="10" filter="url(#glow)"/>
+<path d="M435 794L480 825L435 856Z" fill="#00f5ff" stroke="#fff" stroke-width="5" filter="url(#glow)"/>
+</svg>
