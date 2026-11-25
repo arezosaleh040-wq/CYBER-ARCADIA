@@ -23,7 +23,7 @@ function user():array{if(empty($_SESSION['user']))out(401,['ok'=>false,'error'=>
 function admin():array{$u=user();if(($u['role']??'')!=='admin')out(403,['ok'=>false,'error'=>'admin_required']);return $u;}
 try{$d=$config['db'];$pdo=new PDO(sprintf('mysql:host=%s;port=%d;dbname=%s;charset=%s',$d['host'],$d['port']??3306,$d['name'],$d['charset']??'utf8mb4'),$d['user'],$d['password'],[PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION,PDO::ATTR_DEFAULT_FETCH_MODE=>PDO::FETCH_ASSOC,PDO::ATTR_EMULATE_PREPARES=>false]);}
 catch(Throwable $e){error_log('CYBER-ARCADIA DB: '.$e->getMessage());out(503,['ok'=>false,'error'=>'database_unavailable']);}
-$method=$_SERVER['REQUEST_METHOD'];$path=parse_url($_SERVER['REQUEST_URI']??'/',PHP_URL_PATH)?:'/';$base=rtrim(dirname($_SERVER['SCRIPT_NAME']??''),'/');$route='/'.ltrim(substr($path,strlen($base)),'/');
+$method=$_SERVER['REQUEST_METHOD'];$route='/'.ltrim((string)($_GET['route']??''),'/');
 if($method==='GET'&&$route==='/health')out(200,['ok'=>true,'service'=>'cyber-arcadia-api']);
 if($method==='GET'&&$route==='/csrf'){$_SESSION['csrf']=bin2hex(random_bytes(32));out(200,['ok'=>true,'csrf'=>$_SESSION['csrf']]);}
 if($method==='POST'&&$route==='/register'){
