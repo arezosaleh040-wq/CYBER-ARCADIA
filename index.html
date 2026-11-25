@@ -2,10 +2,12 @@
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>CYBER ARCADIA | آرکید فوق‌پیشرفته نئونی</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%2300f3ff'/><stop offset='.5' stop-color='%23b000ff'/><stop offset='1' stop-color='%23ff0055'/></linearGradient></defs><rect x='3' y='3' width='58' height='58' rx='14' fill='%23020205' stroke='url(%23g)' stroke-width='4'/><path d='M18 24h28a8 8 0 0 1 8 8v6a6 6 0 0 1-10 4l-4-4H24l-4 4a6 6 0 0 1-10-4v-6a8 8 0 0 1 8-8z' fill='none' stroke='url(%23g)' stroke-width='3' stroke-linejoin='round'/><path d='M22 28v8M18 32h8' stroke='%2300f3ff' stroke-width='3' stroke-linecap='round'/><circle cx='42' cy='30' r='2.5' fill='%23ff0055'/><circle cx='47' cy='35' r='2.5' fill='%2300f3ff'/></svg>">
     <meta name="theme-color" content="#020205">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta name="description" content="CYBER ARCADIA؛ مجموعه‌ای از بازی‌های آرکیدی نئونی با کنترل لمسی و صفحه‌کلید.">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome icons -->
@@ -182,9 +184,18 @@
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #020205; }
         ::-webkit-scrollbar-thumb { background: #00f3ff; border-radius: 4px; }
+
+        .skip-link { position: fixed; top: 8px; right: 8px; z-index: 200; padding: 10px 14px; background: #00f3ff; color: #020205; border-radius: 8px; transform: translateY(-160%); }
+        .skip-link:focus { transform: translateY(0); }
+        :focus-visible { outline: 3px solid #ffcc00; outline-offset: 3px; }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+            #bgCanvas { display: none; }
+        }
     </style>
 </head>
 <body class="relative min-h-screen flex flex-col justify-between overflow-x-hidden splash-lock">
+    <a class="skip-link" href="#mainContent">رفتن به محتوای اصلی</a>
     <!-- Intro splash: shows the site name, then slides up -->
     <div id="splash" aria-hidden="true">
         <div class="splash-grid"></div>
@@ -197,7 +208,7 @@
 
 
     <!-- Interactive Background Canvas -->
-    <canvas id="bgCanvas"></canvas>
+    <canvas id="bgCanvas" aria-hidden="true"></canvas>
     
     <!-- CRT Scanline effect overlay -->
     <div class="fixed inset-0 scanline z-10 pointer-events-none opacity-30"></div>
@@ -259,7 +270,7 @@
         </section>
 
         <!-- GAME SELECTION CARDS GRID -->
-        <main class="max-w-7xl mx-auto px-6 py-6 flex-grow w-full">
+        <main id="mainContent" class="max-w-7xl mx-auto px-6 py-6 flex-grow w-full">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 
                 <!-- Game Card 1: City Driver -->
@@ -758,8 +769,10 @@
            2. INTERACTIVE BACKGROUND PARTICLES
         ------------------------------------------------------------------ */
         const bgCanvas = document.getElementById('bgCanvas');
-        const bgCtx = bgCanvas.getContext('2d');
+        const bgCtx = bgCanvas.getContext('2d', { alpha: true });
+        const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         let bgParticles = [];
+        let bgAnimationId = null;
 
         function resizeBgCanvas() {
             bgCanvas.width = window.innerWidth;
@@ -780,6 +793,7 @@
         }
 
         function animateBg() {
+            if (document.hidden || prefersReducedMotion || !bgCtx) { bgAnimationId = null; return; }
             bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
             bgParticles.forEach(p => {
                 p.x += p.vx; p.y += p.vy;
@@ -790,21 +804,32 @@
                 bgCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
                 bgCtx.fill();
             });
-            requestAnimationFrame(animateBg);
+            bgAnimationId = requestAnimationFrame(animateBg);
         }
-        animateBg();
+        if (!prefersReducedMotion) animateBg();
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) { if (bgAnimationId) cancelAnimationFrame(bgAnimationId); bgAnimationId = null; }
+            else if (!prefersReducedMotion && !bgAnimationId) animateBg();
+        });
 
         /* ------------------------------------------------------------------
            3. SCORES MANAGEMENT
         ------------------------------------------------------------------ */
+        function readStoredScore(key, legacyKey) {
+            try {
+                const raw = localStorage.getItem(key) ?? (legacyKey ? localStorage.getItem(legacyKey) : null) ?? '0';
+                const value = Number.parseInt(raw, 10);
+                return Number.isSafeInteger(value) && value >= 0 ? Math.min(value, 1000000000) : 0;
+            } catch (error) { return 0; }
+        }
         const scores = {
-            drive: parseInt(localStorage.getItem('cyber_hs_drive') || localStorage.getItem('cyber_hs_snake') || '0'),
-            space: parseInt(localStorage.getItem('cyber_hs_space') || '0'),
-            memory: parseInt(localStorage.getItem('cyber_hs_memory') || '0'),
-            pong: parseInt(localStorage.getItem('cyber_hs_pong') || '0'),
-            dodge: parseInt(localStorage.getItem('cyber_hs_dodge') || '0'),
-            flap: parseInt(localStorage.getItem('cyber_hs_flap') || '0'),
-            target: parseInt(localStorage.getItem('cyber_hs_target') || '0')
+            drive: readStoredScore('cyber_hs_drive', 'cyber_hs_snake'),
+            space: readStoredScore('cyber_hs_space'),
+            memory: readStoredScore('cyber_hs_memory'),
+            pong: readStoredScore('cyber_hs_pong'),
+            dodge: readStoredScore('cyber_hs_dodge'),
+            flap: readStoredScore('cyber_hs_flap'),
+            target: readStoredScore('cyber_hs_target')
         };
 
         function updateHighScoresDisplay() {
@@ -820,7 +845,7 @@
         function saveHighScore(game, score) {
             if (score > scores[game]) {
                 scores[game] = score;
-                localStorage.setItem(`cyber_hs_${game}`, score);
+                try { localStorage.setItem(`cyber_hs_${game}`, String(Math.max(0, Math.floor(score)))); } catch (error) { /* Session score still works if storage is unavailable. */ }
                 updateHighScoresDisplay();
                 return true;
             }
