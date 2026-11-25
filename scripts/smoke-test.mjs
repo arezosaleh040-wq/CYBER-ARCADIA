@@ -33,3 +33,15 @@ for (const match of html.matchAll(/\bonclick=["']\s*([A-Za-z_$][\w$]*)\s*\(/g)) 
 }
 
 console.log('Smoke tests passed: HTML structure, unique IDs, local assets and DOM/function references.');
+
+const manifestPath = resolve(root, 'manifest.webmanifest');
+const workerPath = resolve(root, 'service-worker.js');
+const pwaPath = resolve(root, 'assets/js/pwa.js');
+assert.ok(existsSync(manifestPath), 'PWA manifest must exist.');
+assert.ok(existsSync(workerPath), 'Service worker must exist.');
+assert.ok(existsSync(pwaPath), 'PWA enhancement script must exist.');
+assert.match(html, /rel=["']manifest["']/i, 'Manifest must be linked.');
+assert.match(html, /id=["']gameGrid["']/i, 'Game grid must have a stable id.');
+assert.match(html, /id=["']gameSearch["']/i, 'Game search must be available.');
+JSON.parse(readFileSync(manifestPath, 'utf8'));
+console.log('PWA checks passed: manifest, worker, search and offline assets.');
