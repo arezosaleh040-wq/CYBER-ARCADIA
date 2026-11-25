@@ -1,0 +1,20 @@
+{
+  "name": "CYBER ARCADIA — Neon Arcade",
+  "short_name": "CYBER ARCADIA",
+  "description": "مجموعه بازی‌های آرکیدی نئونی با کنترل لمسی و صفحه‌کلید",
+  "lang": "fa",
+  "dir": "rtl",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#020205",
+  "theme_color": "#050817",
+  "icons": [
+    {
+      "src": "assets/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
