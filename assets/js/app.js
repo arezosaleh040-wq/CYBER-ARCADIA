@@ -22,7 +22,8 @@
                 return;
             }
 
-            const osc = audioCtx.createOscillator();
+            try {
+                const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
             osc.connect(gain);
             gain.connect(audioCtx.destination);
