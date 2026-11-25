@@ -5,16 +5,22 @@
         let audioCtx = null;
 
         function initAudio() {
-            if (!audioCtx) {
-                const AudioContext = window.AudioContext || window.webkitAudioContext;
-                audioCtx = new AudioContext();
-            }
+            if (audioCtx) return audioCtx;
+            const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+            if (!AudioContextClass) return null;
+            audioCtx = new AudioContextClass();
+            return audioCtx;
         }
 
         function playSound(type) {
             if (!audioEnabled) return;
-            initAudio();
-            if (audioCtx.state === 'suspended') audioCtx.resume();
+            try {
+                if (!initAudio()) return;
+                if (audioCtx.state === 'suspended') audioCtx.resume().catch(() => {});
+            } catch (error) {
+                // Audio is optional: unsupported or blocked audio must never stop gameplay.
+                return;
+            }
 
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
@@ -65,6 +71,9 @@
                 gain.gain.linearRampToValueAtTime(0.01, now + 0.45);
                 osc.start(now); osc.stop(now + 0.45);
             }
+            } catch (error) {
+                // Keep visual gameplay available if a browser rejects Web Audio operations.
+            }
         }
 
         function toggleAudio() {
@@ -104,8 +113,8 @@
         }
 
         function setupMusicGraph() {
-            if (musicBus) return;
-            initAudio();
+            if (musicBus) return true;
+            if (!initAudio()) return false;
             const comp = audioCtx.createDynamicsCompressor();
             comp.connect(audioCtx.destination);
             musicBus = audioCtx.createGain();
@@ -131,6 +140,7 @@
             dlp.connect(echoOut); echoOut.connect(musicBus); echoOut.connect(reverb);
 
             musicNodes = { dry, reverb, delay };
+            return true;
         }
 
         function playPadNote(freq, t, dur) {
@@ -209,8 +219,9 @@
 
         function startMusic() {
             if (!musicEnabled) return;
-            setupMusicGraph();
-            if (audioCtx.state === 'suspended') audioCtx.resume();
+            try {
+                if (!setupMusicGraph()) return;
+                if (audioCtx.state === 'suspended') audioCtx.resume().catch(() => {});
             if (!musicStarted) {
                 musicStarted = true;
                 musicStep = 0;
@@ -219,6 +230,9 @@
             }
             musicBus.gain.cancelScheduledValues(audioCtx.currentTime);
             musicBus.gain.setTargetAtTime(0.9, audioCtx.currentTime, 0.6);
+            } catch (error) {
+                stopMusic();
+            }
         }
 
         function stopMusic() {
@@ -247,13 +261,13 @@
         function unlockMusic() {
             if (!musicEnabled) return;
             if (!musicStarted) startMusic();
-            else if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+            else if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume().catch(() => {});
         }
         ['pointerdown', 'touchstart', 'keydown', 'click'].forEach(ev => window.addEventListener(ev, unlockMusic, { passive: true }));
         document.addEventListener('visibilitychange', () => {
             if (!audioCtx) return;
-            if (document.hidden) audioCtx.suspend();
-            else if (musicEnabled || audioEnabled) audioCtx.resume();
+            if (document.hidden) audioCtx.suspend().catch(() => {});
+            else if (musicEnabled || audioEnabled) audioCtx.resume().catch(() => {});
         });
         updateMusicButton();
 
@@ -335,13 +349,13 @@
         updateHighScoresDisplay();
 
         function saveHighScore(game, score) {
-            if (score > scores[game]) {
-                scores[game] = score;
-                try { localStorage.setItem(`cyber_hs_${game}`, String(Math.max(0, Math.floor(score)))); } catch (error) { /* Session score still works if storage is unavailable. */ }
-                updateHighScoresDisplay();
-                return true;
-            }
-            return false;
+            const allowedGames = ['drive', 'space', 'memory', 'pong', 'dodge', 'flap', 'target'];
+            const safeScore = Number.isFinite(Number(score)) ? Math.min(1000000000, Math.max(0, Math.floor(Number(score)))) : 0;
+            if (!allowedGames.includes(game) || safeScore <= scores[game]) return false;
+            scores[game] = safeScore;
+            try { localStorage.setItem(`cyber_hs_${game}`, String(safeScore)); } catch (error) { /* Session score still works if storage is unavailable. */ }
+            updateHighScoresDisplay();
+            return true;
         }
 
         /* ------------------------------------------------------------------
@@ -383,6 +397,9 @@
         function canvasPoint(e) {
             const rect = gameCanvas.getBoundingClientRect();
             const pt = (e.touches && e.touches[0]) || (e.changedTouches && e.changedTouches[0]) || e;
+            if (!rect.width || !rect.height || !Number.isFinite(pt.clientX) || !Number.isFinite(pt.clientY)) {
+                return { x: gameCanvas.width / 2, y: gameCanvas.height / 2 };
+            }
             return {
                 x: (pt.clientX - rect.left) * gameCanvas.width / rect.width,
                 y: (pt.clientY - rect.top) * gameCanvas.height / rect.height
@@ -397,7 +414,9 @@
         function launchGame(gameType) {
             playSound('click');
             if (gameLoopId) cancelAnimationFrame(gameLoopId);
+            gameLoopId = null;
             if (memoryTimer) clearInterval(memoryTimer);
+            memoryTimer = null;
             resetCanvasHandlers();
             driveState = spaceState = pongState = extraState = memoryState = null;
             memoryGrid.innerHTML = '';
@@ -454,7 +473,9 @@
         function closeGameModal() {
             playSound('click');
             if (gameLoopId) cancelAnimationFrame(gameLoopId);
+            gameLoopId = null;
             if (memoryTimer) clearInterval(memoryTimer);
+            memoryTimer = null;
             resetCanvasHandlers();
             for (const k in keys) keys[k] = false;
             gameModal.classList.add('hidden');
@@ -476,6 +497,7 @@
             playSound('click');
             hideOverlay();
             if (gameLoopId) cancelAnimationFrame(gameLoopId);
+            gameLoopId = null;
             document.getElementById('currentScore').innerText = '0';
             for (const k in keys) keys[k] = false;
             resetCanvasHandlers();
