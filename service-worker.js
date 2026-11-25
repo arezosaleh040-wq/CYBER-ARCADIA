@@ -1,5 +1,5 @@
 'use strict';
-const CACHE='cyber-arcadia-v3';
+const CACHE='cyber-arcadia-v4';
 const CORE=[
  './','./index.html','./assets/css/style.css','./assets/js/app.js','./assets/js/pwa.js',
  './manifest.webmanifest','./assets/icons/icon.svg','./admin/','./admin/index.html'
@@ -17,8 +17,8 @@ self.addEventListener('fetch',event=>{
  if(url.origin===self.location.origin){
   if(request.mode==='navigate'){
    event.respondWith(fetch(request).then(response=>{
-    const copy=response.clone();caches.open(CACHE).then(cache=>cache.put('./index.html',copy));return response;
-   }).catch(()=>caches.match(request).then(cached=>cached||caches.match('./index.html'))));
+    const copy=response.clone();caches.open(CACHE).then(cache=>cache.put(request,copy));return response;
+   }).catch(()=>caches.match(request).then(cached=>cached||(url.pathname.includes('/admin/')?caches.match('./admin/index.html'):caches.match('./index.html')))));
    return;
   }
   event.respondWith(caches.match(request).then(cached=>cached||fetch(request).then(response=>{
