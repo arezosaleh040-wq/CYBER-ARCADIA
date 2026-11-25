@@ -1,4 +1,5 @@
 # Deploy the static CYBER ARCADIA site to GitHub Pages
+# Redeploy Pages after the site was unpublished.
 name: Deploy static content to Pages
 
 on:
