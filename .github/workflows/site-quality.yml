@@ -25,5 +25,12 @@ jobs:
           node --check assets/js/app.js
           node --check assets/js/pwa.js
           node --check service-worker.js
+          node --check scripts/smoke-test.mjs
+          node --check scripts/seo-validation.mjs
+          node --check scripts/pwa-validation.mjs
       - name: Run site smoke tests
         run: node scripts/smoke-test.mjs
+      - name: Validate SEO metadata and sitemap
+        run: node scripts/seo-validation.mjs
+      - name: Validate PWA and service worker
+        run: node scripts/pwa-validation.mjs
