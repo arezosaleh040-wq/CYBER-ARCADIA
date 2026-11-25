@@ -1,29 +1,32 @@
 # CYBER ARCADIA
 
-A Persian (RTL), neon-themed arcade hub built as a static website.
+هاب بازی آرکیدی نئونی، فارسی و راست‌چین؛ کاملاً سازگار با **GitHub Pages** و بدون نیاز به سرور اختصاصی.
 
-## Stack
-- HTML5 for structure and accessibility
-- CSS for layout, effects, responsive behavior, and reduced-motion support
-- Vanilla JavaScript for game logic, canvas rendering, audio, and local high scores
+## فناوری‌ها
+- HTML5 و CSS برای رابط واکنش‌گرا
+- JavaScript خالص برای بازی‌ها، صدا، جلوه‌ها و تحلیل محلی
+- LocalStorage مرورگر برای رکوردها و تنظیمات
+- GitHub Pages برای انتشار فایل‌های ایستا
 
-## Run locally
-Open `index.html` in a modern browser, or serve this directory with any static HTTP server.
+## انتشار
+مخزن را روی شاخه `main` و پوشه `/(root)` در **Settings → Pages** تنظیم کنید. پس از پایان انتشار، سایت در نشانی زیر در دسترس است:
 
-## Deploy with GitHub Pages
-1. Open **Settings → Pages** in this repository.
-2. Under **Build and deployment**, select **Deploy from a branch**.
-3. Select branch `main` and folder `/(root)`, then save.
-4. Wait for the Pages deployment workflow to finish.
+https://arezosaleh040-wq.github.io/CYBER-ARCADIA/
 
-## Security and privacy
-- High scores and the music preference are stored locally in the visitor's browser. They are not sent to a server.
-- Storage access is guarded so browser privacy settings do not prevent the games from loading.
-- External links opened in a new tab use `noopener noreferrer`.
-- Never commit API keys, passwords, or private tokens to this public repository.
-- GitHub Pages serves static files only. It does not execute Python or Java server code. A Python/Java backend requires separate server hosting.
+## مرکز فرماندهی
+پنل مدیریت محلی:
+https://arezosaleh040-wq.github.io/CYBER-ARCADIA/admin/
 
-## Performance and accessibility
-- Background animation pauses when the page is hidden and is disabled for users who prefer reduced motion.
-- The page includes a keyboard skip link and visible keyboard focus.
-- Game controls support touch and keyboard where implemented.
+پنل می‌تواند رکوردهای همین مرورگر را بخواند، تحلیل ساده انجام دهد، از داده‌ها پشتیبان بگیرد و آن‌ها را بازیابی یا پاک کند. به دلیل محدودیت GitHub Pages، پنل نمی‌تواند کاربران سایر بازدیدکنندگان را ببیند یا داده‌های آن‌ها را مدیریت کند.
+
+## محدودیت مهم معماری
+GitHub Pages فقط فایل‌های ایستا را میزبانی می‌کند؛ PHP، MySQL، پایگاه داده مرکزی، ورود سراسری و همگام‌سازی امتیاز بین دستگاه‌ها روی آن اجرا نمی‌شوند. برای حفظ شرط «فقط GitHub Pages»، این پروژه از ذخیره‌سازی محلی مرورگر استفاده می‌کند. پاک‌شدن داده‌های سایت در مرورگر می‌تواند رکوردهای محلی را نیز حذف کند؛ از پنل مدیریت فایل پشتیبان بگیرید.
+
+## حریم خصوصی و امنیت
+- رکوردها و تنظیمات در مرورگر بازدیدکننده ذخیره می‌شوند و به سرور ارسال نمی‌شوند.
+- پنل مدیریت محلی، احراز هویت یا کنترل دسترسی واقعی نیست؛ هر کسی که به همان مرورگر دسترسی داشته باشد می‌تواند داده‌های محلی را تغییر دهد.
+- هیچ کلید API، رمز عبور یا توکن خصوصی را در کد عمومی قرار ندهید.
+- لینک‌های خارجی با `noopener noreferrer` باز می‌شوند.
+
+## اجرای محلی
+فایل `index.html` را در مرورگر باز کنید یا پوشه را با یک وب‌سرور ایستای محلی اجرا کنید.
