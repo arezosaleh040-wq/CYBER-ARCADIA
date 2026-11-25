@@ -21,6 +21,9 @@ jobs:
         with:
           node-version: 22
       - name: Check JavaScript syntax
-        run: node --check assets/js/app.js
+        run: |
+          node --check assets/js/app.js
+          node --check assets/js/pwa.js
+          node --check service-worker.js
       - name: Run site smoke tests
         run: node scripts/smoke-test.mjs
