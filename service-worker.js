@@ -1,7 +1,8 @@
 'use strict';
-const CACHE='cyber-arcadia-v4';
+const CACHE='cyber-arcadia-v5';
 const CORE=[
  './','./index.html','./assets/css/style.css','./assets/js/app.js','./assets/js/pwa.js',
+ './assets/images/cyber-arcadia-logo.svg',
  './manifest.webmanifest','./assets/icons/icon.svg','./admin/','./admin/index.html'
 ];
 self.addEventListener('install',event=>{
@@ -18,7 +19,7 @@ self.addEventListener('fetch',event=>{
   if(request.mode==='navigate'){
    event.respondWith(fetch(request).then(response=>{
     const copy=response.clone();caches.open(CACHE).then(cache=>cache.put(request,copy));return response;
-   }).catch(()=>caches.match(request).then(cached=>cached||(url.pathname.includes('/admin/')?caches.match('./admin/index.html'):caches.match('./index.html')))));
+   }).catch(()=>caches.match(request).then(cached=>cached||(url.pathname.includes('/admin/')?caches.match('./admin/index.html'):caches.match('./index.html'))));
    return;
   }
   event.respondWith(caches.match(request).then(cached=>cached||fetch(request).then(response=>{
