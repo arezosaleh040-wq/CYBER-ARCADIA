@@ -258,3 +258,79 @@ button:disabled { opacity: .55; cursor: not-allowed; }
 @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
 }
+
+
+/* ---------- Responsive polish, accessibility and arcade tools ---------- */
+:root { color-scheme: dark; scroll-behavior: smooth; }
+html { scroll-padding-top: 88px; }
+body { min-width: 320px; }
+button, a, input { -webkit-tap-highlight-color: transparent; }
+button:focus-visible, a:focus-visible, input:focus-visible, #splash:focus-visible {
+  outline: 3px solid #00f3ff; outline-offset: 3px;
+}
+.skip-link {
+  position: fixed; top: 8px; right: 8px; z-index: 200;
+  padding: 10px 14px; border-radius: 10px; background: #00f3ff;
+  color: #020205; font-weight: 800; transform: translateY(-160%);
+}
+.skip-link:focus { transform: translateY(0); }
+.arcade-tools {
+  display:flex; align-items:center; justify-content:space-between; gap:14px;
+  flex-wrap:wrap; margin:0 0 20px; padding:14px;
+  border:1px solid rgba(0,243,255,.22); border-radius:16px;
+  background:rgba(8,12,28,.82); backdrop-filter:blur(14px);
+}
+.arcade-search-wrap {
+  display:flex; align-items:center; gap:10px; flex:1 1 260px; min-width:0;
+  border:1px solid rgba(0,243,255,.28); border-radius:12px;
+  background:#050914; padding:0 12px; color:#00f3ff;
+}
+.arcade-search-wrap input {
+  width:100%; min-width:0; padding:12px 0; border:0; outline:0;
+  background:transparent; color:#fff; font:inherit; font-size:14px;
+}
+.arcade-search-wrap input:focus-visible { outline:0; }
+.arcade-search-wrap kbd {
+  border:1px solid #34445c; border-radius:5px; padding:2px 7px;
+  color:#9aabc2; font:12px monospace;
+}
+.arcade-tool-actions { display:flex; align-items:center; justify-content:flex-end; gap:9px; flex-wrap:wrap; }
+.arcade-status {
+  display:inline-flex; align-items:center; gap:6px; padding:7px 10px;
+  border:1px solid #27364d; border-radius:999px; color:#aebbd0; font-size:11px;
+}
+.arcade-status.online { color:#7df5bd; border-color:rgba(125,245,189,.35); }
+.arcade-status.offline { color:#ffd27d; border-color:rgba(255,210,125,.35); }
+.arcade-tool-btn {
+  border:1px solid #00a9bd; border-radius:10px; padding:8px 12px;
+  background:rgba(0,243,255,.12); color:#9df7ff; font:700 12px inherit;
+}
+.arcade-tool-btn[hidden], .no-games-found[hidden] { display:none !important; }
+.no-games-found {
+  margin:0 0 18px; padding:18px; text-align:center; border-radius:12px;
+  border:1px dashed rgba(0,243,255,.4); color:#b7c7d9;
+}
+#gameGrid > [hidden] { display:none !important; }
+.glass-box { min-width:0; }
+.glass-box p { overflow-wrap:anywhere; }
+#gameCanvas { display:block; width:min(100%, 560px); margin-inline:auto; }
+@media (max-width:640px) {
+  header { padding-inline:14px !important; }
+  header > div { gap:10px; }
+  header h1 { font-size:clamp(15px,4.2vw,21px) !important; letter-spacing:.04em !important; }
+  header .flex.items-center.gap-4 { gap:7px !important; }
+  header button { padding-inline:10px !important; }
+  main#mainContent { padding-inline:14px !important; }
+  .arcade-tools { padding:11px; }
+  .arcade-tool-actions { width:100%; justify-content:space-between; }
+  .arcade-status { font-size:10px; }
+  .glass-box { padding:15px !important; }
+  #splash .splash-hint { margin-top:20px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior:auto !important; animation-duration:.01ms !important;
+    animation-iteration-count:1 !important; transition-duration:.01ms !important;
+  }
+  #bgCanvas { display:none; }
+}
