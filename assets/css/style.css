@@ -146,3 +146,115 @@ body {
             *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
             #bgCanvas { display: none; }
         }
+
+
+/* ---------- Responsive layout and centered splash refinement ---------- */
+html { scroll-behavior: smooth; }
+body { min-width: 320px; }
+header .max-w-7xl {
+    flex-wrap: wrap;
+    gap: 14px 20px;
+}
+header .max-w-7xl > div:first-child { min-width: 0; }
+header h1 {
+    font-size: clamp(1rem, 3.6vw, 1.5rem) !important;
+    line-height: 1.25;
+    overflow-wrap: anywhere;
+}
+header .max-w-7xl > div:last-child {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 8px;
+}
+#mainContent { width: min(100%, 1320px); }
+#mainContent > .grid { align-items: stretch; }
+#mainContent .glass-box {
+    min-width: 0;
+    min-height: 330px;
+    height: 100%;
+}
+#mainContent .glass-box p { overflow-wrap: anywhere; }
+#mainContent .glass-box button { min-height: 42px; }
+section.relative.pt-8 {
+    width: min(100%, 980px);
+    padding-inline: clamp(16px, 4vw, 32px);
+}
+#splash {
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    padding: max(24px, env(safe-area-inset-top)) 16px max(24px, env(safe-area-inset-bottom));
+}
+#splash .splash-emblem {
+    width: clamp(68px, 16vw, 96px);
+    height: clamp(68px, 16vw, 96px);
+    margin: 0 auto 22px;
+    display: grid;
+    place-items: center;
+    position: relative;
+    z-index: 1;
+    border-radius: 26px;
+    color: #00f3ff;
+    font-size: clamp(2rem, 8vw, 3rem);
+    background: linear-gradient(145deg, rgba(0,243,255,.16), rgba(176,0,255,.16));
+    border: 1px solid rgba(0,243,255,.65);
+    box-shadow: 0 0 24px rgba(0,243,255,.22), inset 0 0 22px rgba(176,0,255,.16);
+}
+#splash .splash-line {
+    width: 100%;
+    max-width: 100%;
+    justify-content: center;
+    align-items: center;
+    white-space: nowrap;
+    text-align: center;
+    direction: ltr;
+    margin-inline: auto;
+}
+#splash .splash-cyber {
+    font-size: clamp(2.2rem, 12vw, 5.5rem);
+    letter-spacing: clamp(.025em, .7vw, .1em);
+    line-height: 1.15;
+}
+#splash .splash-arcadia {
+    font-size: clamp(1.35rem, 7.1vw, 3.4rem);
+    letter-spacing: clamp(.035em, .65vw, .18em);
+    line-height: 1.25;
+    margin-top: .18em;
+}
+#splash .splash-sub, #splash .splash-hint {
+    width: min(100%, 420px);
+    padding-inline: 8px;
+    line-height: 1.8;
+}
+#splash .splash-bar { margin-inline: auto; }
+#gameModal { overscroll-behavior: contain; }
+#canvasContainer { min-width: 0; }
+#gameCanvas { display: block; width: min(100%, 400px); max-height: 58vh; object-fit: contain; }
+button, a { -webkit-tap-highlight-color: transparent; }
+button:disabled { opacity: .55; cursor: not-allowed; }
+
+@media (max-width: 640px) {
+    header { padding: 12px 14px !important; }
+    header .max-w-7xl { justify-content: center; }
+    header .max-w-7xl > div:first-child { width: 100%; justify-content: center; }
+    header .max-w-7xl > div:last-child { width: 100%; justify-content: center; }
+    header .max-w-7xl > div:last-child button { padding: 9px 12px; }
+    #mainContent { padding: 18px 14px 28px; }
+    #mainContent > .grid { gap: 14px; }
+    #mainContent .glass-box { min-height: 0; padding: 16px; }
+    section.relative.pt-8 { padding-top: 24px; padding-bottom: 10px; }
+    section.relative.pt-8 h2 { font-size: clamp(1.65rem, 8vw, 2.35rem); }
+    #gameModal { padding: 8px; }
+    #gameModal > div { max-height: calc(100dvh - 16px); }
+    #canvasContainer { min-height: 0 !important; padding: 8px; }
+    #gameCanvas { max-height: 52dvh; }
+}
+@media (min-width: 641px) and (max-width: 1023px) {
+    #mainContent .glass-box { min-height: 350px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+}
