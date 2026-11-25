@@ -1,26 +1,61 @@
 <!doctype html>
-<html lang="fa" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#080d1c"><title>CYBER COMMAND CENTER</title>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#080d1c"><title>CYBER COMMAND CENTER</title>
 <style>
-:root{color-scheme:dark;--bg:#080d1c;--panel:#111c32;--line:#293b5b;--cyan:#43e5ff;--muted:#9aabc6}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 75% 0,#183553,transparent 48%),var(--bg);color:#eef6ff;font:15px system-ui,Tahoma,sans-serif;min-height:100vh}header{padding:22px clamp(16px,4vw,44px);border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}h1{font-size:clamp(20px,4vw,30px);margin:0}h1 b{color:var(--cyan)}main{width:min(1080px,calc(100% - 28px));margin:26px auto}.card{background:linear-gradient(145deg,#14223b,#0e172a);border:1px solid var(--line);border-radius:16px;padding:19px;margin-bottom:16px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:13px}.muted{color:var(--muted)}.metric{font-size:34px;color:var(--cyan);font-weight:800;margin-top:8px}.row{display:flex;gap:8px;flex-wrap:wrap}input,button{font:inherit;padding:11px 13px;border-radius:10px;border:1px solid var(--line);background:#091426;color:white}input{flex:1;min-width:160px}button{background:#12364b;border-color:#167f9a;cursor:pointer}button:hover{filter:brightness(1.2)}table{width:100%;border-collapse:collapse}td,th{text-align:right;padding:10px;border-bottom:1px solid var(--line)}th{color:var(--cyan)}.hidden{display:none}#error{color:#fda4af}.tag{font-size:12px;color:var(--muted)}@media(max-width:540px){td,th{font-size:12px;padding:8px 4px}}
-</style></head><body>
-<header><div><h1><b>CYBER</b> COMMAND CENTER</h1><div class="muted">مرکز فرماندهی | مدیریت و هسته هوشمند</div></div><div class="row"><button id="refresh">به‌روزرسانی</button><button id="logout" class="hidden">خروج</button></div></header>
+:root{color-scheme:dark;--bg:#080d1c;--panel:#111c32;--line:#293b5b;--cyan:#43e5ff;--muted:#9aabc6;--pink:#ff6b9d}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 75% 0,#183553,transparent 48%),var(--bg);color:#eef6ff;font:15px system-ui,Tahoma,sans-serif;min-height:100vh}
+header{padding:22px clamp(16px,4vw,44px);border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}
+h1{font-size:clamp(20px,4vw,30px);margin:0}h1 b{color:var(--cyan)}main{width:min(1120px,calc(100% - 28px));margin:26px auto}
+.card{background:linear-gradient(145deg,#14223b,#0e172a);border:1px solid var(--line);border-radius:16px;padding:19px;margin-bottom:16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:13px}.muted{color:var(--muted)}.metric{font-size:34px;color:var(--cyan);font-weight:800;margin-top:8px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}input,button{font:inherit;padding:11px 13px;border-radius:10px;border:1px solid var(--line);background:#091426;color:white}
+button{background:#12364b;border-color:#167f9a;cursor:pointer}button:hover{filter:brightness(1.2)}button.danger{border-color:#a33c5d;background:#492036}button.secondary{border-color:#52627c;background:#202d43}
+table{width:100%;border-collapse:collapse}td,th{text-align:right;padding:11px;border-bottom:1px solid var(--line)}th{color:var(--cyan)}
+.notice{border-right:3px solid var(--cyan);padding:10px 13px;background:#0a1b2b;border-radius:8px;line-height:1.9}
+.tag{font-size:12px;color:var(--muted)}.status{color:#7df5c1}.warning{color:#ffd27d}.hidden{display:none}
+@media(max-width:540px){td,th{font-size:12px;padding:8px 4px}.card{padding:14px}}
+</style></head>
+<body>
+<header><div><h1><b>CYBER</b> COMMAND CENTER</h1><div class="muted">مرکز فرماندهی محلی | نسخه سازگار با GitHub Pages</div></div>
+<div class="row"><a href="../" style="color:var(--cyan)">بازگشت به آرکید ↗</a><button id="refresh">به‌روزرسانی</button></div></header>
 <main>
-<div class="card"><h3>اتصال سرور PHP</h3><p class="muted">آدرس فایل index.php روی هاست PHP را وارد کنید؛ این صفحه به‌تنهایی PHP یا MySQL اجرا نمی‌کند.</p><div class="row"><input id="api" placeholder="https://your-domain.example/api/index.php"><button id="save">ذخیره آدرس</button></div><p class="tag" id="status">اتصال تنظیم نشده است.</p><p id="error"></p></div>
-<div class="card" id="loginBox"><h3>ورود مدیر</h3><div class="row"><input id="loginName" placeholder="نام کاربری یا ایمیل" autocomplete="username"><input id="password" type="password" placeholder="رمز عبور" autocomplete="current-password"><button id="login">ورود</button></div></div>
-<div id="dashboard" class="hidden"><div class="grid"><div class="card"><div class="muted">کاربران</div><div class="metric" id="users">—</div></div><div class="card"><div class="muted">امتیازهای ثبت‌شده</div><div class="metric" id="scores">—</div></div><div class="card"><div class="muted">بازی‌ها</div><div class="metric" id="games">—</div></div></div>
-<div class="card"><h3>کاربران اخیر</h3><div style="overflow:auto"><table><thead><tr><th>شناسه</th><th>نام کاربری</th><th>ایمیل</th><th>نقش</th></tr></thead><tbody id="recent"></tbody></table></div></div>
-<div class="card"><h3>مدیریت فهرست بازی‌ها</h3><div class="row"><input id="gameKey" placeholder="شناسه انگلیسی بازی"><input id="gameTitle" placeholder="عنوان بازی"><button id="addGame">ثبت / به‌روزرسانی</button></div><div id="gameList"></div></div>
-<div class="card"><h3>هسته هوشمند</h3><p class="muted">در این مرحله، مرکز فرماندهی آمار واقعی API را می‌خواند و وضعیت سیستم را نمایش می‌دهد. تحلیل هوشمند خودکار پس از انتخاب و اتصال سرویس AI در سمت سرور فعال می‌شود؛ کلید سرویس نباید در مرورگر ذخیره شود.</p><div id="engine" class="tag">در انتظار اتصال</div></div></div>
+<section class="card"><h3>وضعیت معماری</h3>
+<p class="notice">این نسخه کاملاً ایستا است و روی GitHub Pages اجرا می‌شود. اطلاعات این پنل فقط در حافظه مرورگر همین دستگاه ذخیره می‌شود؛ حساب کاربری سراسری، دیتابیس مشترک و مدیریت بازیکنان دیگران وجود ندارد. پاک‌کردن داده‌های مرورگر ممکن است اطلاعات محلی را حذف کند.</p>
+<div class="row"><span class="status">● بدون نیاز به سرور PHP یا MySQL</span><span class="tag">ذخیره‌سازی: LocalStorage مرورگر</span></div></section>
+<section class="grid">
+<div class="card"><div class="muted">مجموع رکوردها</div><div class="metric" id="total">۰</div></div>
+<div class="card"><div class="muted">بازی‌های دارای رکورد</div><div class="metric" id="played">۰</div></div>
+<div class="card"><div class="muted">بالاترین رکورد</div><div class="metric" id="best">۰</div></div>
+<div class="card"><div class="muted">وضعیت ذخیره‌سازی</div><div class="metric" style="font-size:22px" id="storage">—</div></div>
+</section>
+<section class="card"><h3>تحلیل‌گر محلی</h3><p id="insight" class="muted">برای تحلیل، داده‌ها را به‌روزرسانی کنید.</p><p id="engineStatus" class="tag"></p></section>
+<section class="card"><h3>رکورد بازی‌ها در این مرورگر</h3><div style="overflow:auto"><table><thead><tr><th>بازی</th><th>شناسه</th><th>رکورد</th><th>وضعیت</th></tr></thead><tbody id="scores"></tbody></table></div></section>
+<section class="card"><h3>پشتیبان‌گیری و بازیابی</h3><p class="muted">فایل پشتیبان فقط تنظیمات و رکوردهای محلی CYBER ARCADIA را شامل می‌شود.</p><div class="row"><button id="export">دریافت فایل پشتیبان</button><label class="secondary" style="padding:11px 13px;border:1px solid var(--line);border-radius:10px;cursor:pointer">بازیابی فایل<input id="importFile" type="file" accept="application/json" hidden></label></div><p id="backupStatus" class="tag" aria-live="polite"></p></section>
+<section class="card"><h3>مدیریت داده‌های محلی</h3><p class="warning">این عملیات فقط رکوردهای همین مرورگر را تغییر می‌دهد و قابل بازگشت نیست؛ قبل از پاک‌سازی، پشتیبان بگیرید.</p><button class="danger" id="reset">پاک‌کردن رکوردهای این دستگاه</button><p id="resetStatus" class="tag" aria-live="polite"></p></section>
 </main>
 <script>
-const el=id=>document.getElementById(id);let base=localStorage.getItem('cyber_api_url')||'',token='';el('api').value=base;
-function note(s,bad=false){el('status').textContent=s;el('error').textContent=bad?s:''}
-function url(route){return base+(base.includes('?')?'&':'?')+'route='+encodeURIComponent(route)}
-async function request(route,method='GET',data={}){if(!base)throw Error('ابتدا آدرس API را ذخیره کنید.');const headers={'Content-Type':'application/json'};if(method!=='GET'){if(!token){const c=await fetch(url('csrf'),{credentials:'include'});const j=await c.json();token=j.csrf}headers['X-CSRF-Token']=token}const r=await fetch(url(route),{method,headers,credentials:'include',...(method==='GET'?{}:{body:JSON.stringify(data)})});const j=await r.json();if(!r.ok)throw Error(j.error||'خطای ارتباط با سرور');return j}
-function esc(v){return String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-el('save').onclick=()=>{base=el('api').value.trim();localStorage.setItem('cyber_api_url',base);note('آدرس ذخیره شد؛ اکنون ورود مدیر را انجام دهید.')};
-el('login').onclick=async()=>{try{const j=await request('login','POST',{login:el('loginName').value,password:el('password').value});if(j.user.role!=='admin')throw Error('این حساب مدیر نیست.');el('loginBox').classList.add('hidden');el('logout').classList.remove('hidden');await load()}catch(e){note(e.message,true)}};
-async function load(){try{const j=await request('admin/overview');el('users').textContent=j.stats.users;el('scores').textContent=j.stats.scores;el('games').textContent=j.stats.games;el('recent').innerHTML=j.recent_users.map(u=>'<tr><td>'+u.id+'</td><td>'+esc(u.username)+'</td><td>'+esc(u.email)+'</td><td>'+esc(u.role)+'</td></tr>').join('');const g=await request('admin/games');el('gameList').innerHTML='<table><thead><tr><th>شناسه</th><th>عنوان</th><th>وضعیت</th></tr></thead><tbody>'+g.games.map(x=>'<tr><td>'+esc(x.game_key)+'</td><td>'+esc(x.title)+'</td><td>'+(x.enabled?'فعال':'غیرفعال')+'</td></tr>').join('')+'</tbody></table>';el('dashboard').classList.remove('hidden');el('engine').textContent='API متصل است؛ ماژول تحلیل هوشمند منتظر اتصال سرویس AI امن است.';note('اتصال برقرار شد.')}catch(e){note(e.message,true)}}
-el('addGame').onclick=async()=>{try{await request('admin/games','POST',{game_key:el('gameKey').value.trim(),title:el('gameTitle').value.trim()});await load()}catch(e){note(e.message,true)}};
-el('refresh').onclick=load;el('logout').onclick=async()=>{try{await request('logout','POST')}catch(e){}location.reload()};
+(()=>{'use strict';
+const games=[['drive','رانندگی شهری'],['space','مدافع لیزری'],['memory','حافظه سایبری'],['pong','پینگ‌پنگ سایبری'],['dodge','فرار نئونی'],['flap','پرواز سایبری'],['target','هدف متحرک']];
+const $=id=>document.getElementById(id),key=g=>'cyber_hs_'+g;
+const read=g=>{try{const n=Number.parseInt(localStorage.getItem(key(g))||'0',10);return Number.isSafeInteger(n)&&n>0?Math.min(n,1e9):0}catch(_){return 0}};
+const fmt=n=>new Intl.NumberFormat('fa-IR').format(n);
+function snapshot(){return {version:1,createdAt:new Date().toISOString(),scores:Object.fromEntries(games.map(([g])=>[g,read(g)])),music:localStorage.getItem('cyber_music')||'on'};}
+function render(){
+ const data=snapshot(),vals=Object.values(data.scores),total=vals.reduce((a,b)=>a+b,0),played=vals.filter(Boolean).length,best=Math.max(0,...vals);
+ $('total').textContent=fmt(total);$('played').textContent=fmt(played);$('best').textContent=fmt(best);
+ let available=true;try{const k='__cyber_test__';localStorage.setItem(k,'1');localStorage.removeItem(k)}catch(_){available=false}
+ $('storage').textContent=available?'فعال':'محدود';
+ $('scores').innerHTML=games.map(([g,title])=>'<tr><td>'+title+'</td><td dir="ltr">'+g+'</td><td>'+fmt(data.scores[g])+'</td><td>'+(data.scores[g]?'ثبت شده':'هنوز بازی نشده')+'</td></tr>').join('');
+ if(!played)$('insight').textContent='هنوز رکوردی در این مرورگر ثبت نشده است. یکی از بازی‌ها را اجرا کنید تا تحلیل‌گر بتواند آمار ارائه دهد.';
+ else {const top=games.filter(([g])=>data.scores[g]===best).map(x=>x[1]).join('، ');$('insight').textContent='در '+fmt(played)+' بازی رکورد ثبت شده است. بالاترین رکورد فعلی مربوط به «'+top+'» با '+fmt(best)+' امتیاز است. مجموع رکوردهای ذخیره‌شده: '+fmt(total)+' امتیاز.'}
+ $('engineStatus').textContent='هسته تحلیل‌گر JavaScript فعال است؛ تحلیل فقط بر پایه داده‌های همین مرورگر انجام می‌شود.';
+}
+$('refresh').addEventListener('click',render);
+$('export').addEventListener('click',()=>{const blob=new Blob([JSON.stringify(snapshot(),null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='cyber-arcadia-backup.json';a.click();URL.revokeObjectURL(url);$('backupStatus').textContent='فایل پشتیبان آماده شد.'});
+$('importFile').addEventListener('change',async e=>{const file=e.target.files&&e.target.files[0];if(!file)return;try{const data=JSON.parse(await file.text());if(!data||data.version!==1||!data.scores||typeof data.scores!=='object')throw Error('ساختار فایل پشتیبان معتبر نیست.');for(const [g] of games){const n=Number(data.scores[g]||0);if(!Number.isSafeInteger(n)||n<0||n>1e9)throw Error('مقدار رکورد نامعتبر است: '+g);localStorage.setItem(key(g),String(n))}if(['on','off'].includes(data.music))localStorage.setItem('cyber_music',data.music);$('backupStatus').textContent='بازیابی با موفقیت انجام شد.';render()}catch(err){$('backupStatus').textContent='خطا: '+err.message}finally{e.target.value=''}});
+$('reset').addEventListener('click',()=>{if(!confirm('رکوردهای هفت بازی در همین مرورگر پاک شوند؟'))return;for(const [g] of games)localStorage.removeItem(key(g));localStorage.removeItem('cyber_hs_snake');$('resetStatus').textContent='رکوردهای محلی پاک شدند.';render()});
+window.addEventListener('storage',render);render();
+})();
 </script></body></html>
