@@ -1,5 +1,4 @@
 # Deploy the static CYBER ARCADIA site to GitHub Pages
-# Redeploy Pages after the site was unpublished.
 name: Deploy static content to Pages
 
 on:
@@ -8,7 +7,6 @@ on:
   workflow_dispatch:
 
 permissions:
-  actions: write
   contents: read
   pages: write
   id-token: write
@@ -38,10 +36,7 @@ jobs:
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          name: github-pages-${{ github.run_id }}-${{ github.run_attempt }}
-          path: '/tmp/pages-site'
+          path: /tmp/pages-site
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-        with:
-          artifact_name: github-pages-${{ github.run_id }}-${{ github.run_attempt }}
