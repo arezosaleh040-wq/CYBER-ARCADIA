@@ -1,5 +1,5 @@
 'use strict';
-const CACHE = 'cyber-arcadia-v6';
+const CACHE = 'cyber-arcadia-v7';
 const CORE = [
   './',
   './index.html',
