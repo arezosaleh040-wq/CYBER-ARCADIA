@@ -1,8 +1,9 @@
 'use strict';
-const CACHE = 'cyber-arcadia-v5';
+const CACHE = 'cyber-arcadia-v6';
 const CORE = [
   './',
   './index.html',
+  './drive.html',
   './assets/css/style.css',
   './assets/js/app.js',
   './assets/js/pwa.js',
