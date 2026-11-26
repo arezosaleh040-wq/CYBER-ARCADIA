@@ -27,7 +27,7 @@
 <canvas id="world"></canvas>
 <div class="hud">
  <div class="top"><div class="brand"><b>CYBER ARCADIA</b><small>REALISTIC 3D DRIVE • LIVE CITY SYSTEM</small></div><div class="stats"><div class="stat"><small>SPEED</small><strong id="speed">000</strong><em>KM/H</em></div><div class="stat"><small>DISTANCE</small><strong id="distance">0.0</strong><em>KM</em></div><div class="stat"><small>GEAR</small><strong id="gear">N</strong></div></div></div>
- <div class="actions"><button class="action" id="camera">◉ نمای تعقیبی</button><button class="action" id="lights">✦ چراغ‌ها: روشن</button><button class="action" id="pause">Ⅱ مکث</button><button class="action" id="back">↩ خروج</button></div>
+ <div class="actions"><button class="action" id="camera">◉ سوم‌شخص</button><button class="action" id="lights">✦ چراغ‌ها: روشن</button><button class="action" id="pause">Ⅱ مکث</button><button class="action" id="back">↩ خروج</button></div>
  <div class="bottom"><div class="hint">فرمان: دکمه‌های چپ و راست یا A / D<br>گاز و ترمز را نگه دار • موبایل و کامپیوتر</div><div class="steer"><button class="pedal" id="left">◀</button><button class="pedal" id="right">▶</button></div><div class="pedals"><button class="pedal brake" id="brake"><span>▤</span>ترمز</button><button class="pedal" id="gas"><span>⌁</span>گاز</button></div></div>
 </div>
 <div id="intro"><div class="intro-card"><div class="kicker">NEXT-GEN DRIVING EXPERIENCE</div><h1>3D CITY DRIVE</h1><p>به شهر نئونی خوش آمدی. پشت فرمان بنشین، در خیابان‌های سه‌بعدی حرکت کن و حس سرعت، تعلیق و رانندگی کابین را تجربه کن.</p><p>برای بهترین تجربه، گوشی را افقی بگیر.</p><button id="start">روشن کردن موتور و شروع رانندگی</button></div></div>
@@ -80,7 +80,7 @@ function makeCar(color=0x12a9d0){
   -.61,1.82,.72, .61,1.82,.72, -.78,1.02,1.27, .78,1.02,1.27
  ];
  cabGeo.setAttribute('position',new THREE.Float32BufferAttribute(v,3));
- cabGeo.setIndex([0,2,1,1,2,3,2,4,3,3,4,5,4,6,5,5,6,7,0,1,6,1,7,6,0,6,2,2,6,4,1,3,7,3,5,7]);
+ cabGeo.setIndex([2,4,3,3,4,5,4,6,5,5,6,7,0,1,6,1,7,6,0,6,2,2,6,4,1,3,7,3,5,7]);
  cabGeo.computeVertexNormals();
  const cabin=new THREE.Mesh(cabGeo,paint);cabin.castShadow=true;g.add(cabin);
  // Panoramic front/rear glass and side windows
@@ -99,6 +99,20 @@ function makeCar(color=0x12a9d0){
   addBox(.035,.34,1.55,side*1.015,.72,.05,darkPaint);
   addBox(.08,.1,2.35,side*.98,.42,0,paint);
   addBox(.18,.12,.34,side*1.05,1.22,-.92,paint);
+ }
+ // Driver cockpit: dashboard, instrument screen and steering wheel
+ const dash=addBox(1.48,.2,.46,0,1.08,-.72,darkPaint);
+ dash.rotation.x=-.08;
+ const instrument=addBox(.58,.23,.035,0,1.25,-.77,new THREE.MeshBasicMaterial({color:0x07394b}));
+ const screenGlow=new THREE.MeshBasicMaterial({color:0x31eaff,emissive:0x0b7188});
+ addBox(.48,.035,.025,0,1.29,-.795,screenGlow);
+ const wheelRing=new THREE.Mesh(new THREE.TorusGeometry(.29,.045,10,28),darkPaint);
+ wheelRing.position.set(0,1.27,-.35);g.add(wheelRing);
+ const wheelHub=new THREE.Mesh(new THREE.CylinderGeometry(.085,.085,.09,16),alloy);
+ wheelHub.rotation.x=Math.PI/2;wheelHub.position.set(0,1.27,-.35);g.add(wheelHub);
+ for(const a of [0,Math.PI*2/3,Math.PI*4/3]){
+  const spoke=new THREE.Mesh(new THREE.BoxGeometry(.045,.29,.055),alloy);
+  spoke.position.set(Math.sin(a)*.13,1.27+Math.cos(a)*.13,-.35);spoke.rotation.z=-a;g.add(spoke);
  }
  // Roof panel, rear diffuser and sporty spoiler
  addBox(1.18,.09,1.02,0,1.84,.28,paint);
@@ -139,7 +153,7 @@ function makeCar(color=0x12a9d0){
 const player=makeCar(0x0b9ed0);scene.add(player);const traffic=[];
 function addTraffic(z){const lanes=[-5.8,0,5.8],lane=Math.floor(Math.random()*3),car=makeCar([0xe84a5f,0xf2b544,0x4c83c7,0xeeeeee,0x40a78b][Math.floor(Math.random()*5)]);car.scale.setScalar(.9+Math.random()*.13);car.position.set(lanes[lane],0,z);scene.add(car);traffic.push({mesh:car,speed:12+Math.random()*25});}
 for(let i=0;i<7;i++)addTraffic(-65-i*42);
-const s={speed:0,x:0,steer:0,gas:false,brake:false,left:false,right:false,paused:false,started:false,hood:false,lights:true,dist:0,crash:false,last:performance.now()};
+const s={speed:0,x:0,steer:0,gas:false,brake:false,left:false,right:false,paused:false,started:false,hood:true,lights:true,dist:0,crash:false,last:performance.now()};
 let engine=null,osc=null,engineGain=null;
 function startSound(){try{const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;engine=engine||new AC();if(engine.state==='suspended')engine.resume();if(!osc){osc=engine.createOscillator();engineGain=engine.createGain();osc.type='sawtooth';osc.frequency.value=55;engineGain.gain.value=.025;osc.connect(engineGain);engineGain.connect(engine.destination);osc.start();}}catch{}}
 function bind(id,key){const el=document.getElementById(id),off=()=>{s[key]=false;el.classList.remove('active');};el.addEventListener('pointerdown',e=>{e.preventDefault();s[key]=true;el.classList.add('active');el.setPointerCapture(e.pointerId);});el.addEventListener('pointerup',off);el.addEventListener('pointercancel',off);el.addEventListener('lostpointercapture',off);}
@@ -147,7 +161,7 @@ function bind(id,key){const el=document.getElementById(id),off=()=>{s[key]=false
 const keyMap={ArrowUp:'gas',KeyW:'gas',ArrowDown:'brake',KeyS:'brake',ArrowLeft:'left',KeyA:'left',ArrowRight:'right',KeyD:'right'};
 addEventListener('keydown',e=>{if(keyMap[e.code]){s[keyMap[e.code]]=true;e.preventDefault();}if(e.code==='KeyC')toggleCamera();if(e.code==='Escape')togglePause();});
 addEventListener('keyup',e=>{if(keyMap[e.code])s[keyMap[e.code]]=false;});
-function toggleCamera(){s.hood=!s.hood;document.getElementById('camera').textContent=s.hood?'◉ نمای کابین':'◉ نمای تعقیبی';}
+function toggleCamera(){s.hood=!s.hood;document.getElementById('camera').textContent=s.hood?'◉ اول‌شخص':'◉ سوم‌شخص';}
 document.getElementById('camera').onclick=toggleCamera;document.getElementById('lights').onclick=()=>{s.lights=!s.lights;document.getElementById('lights').textContent='✦ چراغ‌ها: '+(s.lights?'روشن':'خاموش');};
 function togglePause(){if(!s.started||s.crash)return;s.paused=!s.paused;notice.style.display=s.paused?'block':'none';}
 document.getElementById('pause').onclick=togglePause;document.getElementById('resume').onclick=()=>{s.paused=false;notice.style.display='none';s.last=performance.now();};
@@ -155,7 +169,7 @@ document.getElementById('back').onclick=()=>location.href='index.html';document.
 function finish(){s.crash=true;s.speed=0;notice.style.display='block';document.getElementById('noticeTitle').textContent='پایان مسیر';document.getElementById('noticeText').textContent='با خودروهای اطراف برخورد کردی. دوباره تلاش کن و مسیر را با دقت بیشتری ادامه بده.';document.getElementById('resume').textContent='شروع دوباره';document.getElementById('resume').onclick=()=>location.reload();}
 function resize(){renderer.setSize(innerWidth,innerHeight);camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();}addEventListener('resize',resize);
 function animate(now){requestAnimationFrame(animate);const dt=Math.min(.04,(now-s.last)/1000||.016);s.last=now;if(s.started&&!s.paused&&!s.crash){const target=s.gas?190:s.brake?0:Math.max(0,s.speed-10),accel=s.gas?34:s.brake?90:18;s.speed+=Math.sign(target-s.speed)*Math.min(Math.abs(target-s.speed),accel*dt);const steer=(s.left?-1:0)+(s.right?1:0);s.steer+=(steer-s.steer)*Math.min(1,dt*7);s.x+=s.steer*(2.8+s.speed*.025)*dt;s.x=Math.max(-6.1,Math.min(6.1,s.x));player.position.x=s.x;player.userData.headlights.forEach(l=>l.intensity=s.lights?2.2:0);player.rotation.z=-s.steer*.09;player.rotation.y=-s.steer*.055;player.userData.wheels.forEach(w=>w.rotation.x-=s.speed*dt*.11);const travel=s.speed*dt*.19;s.dist+=travel;laneMarks.forEach(m=>{m.position.z+=travel*2.5;if(m.position.z>8)m.position.z-=408;});buildings.forEach(g=>{g.position.z+=travel*2.5;if(g.position.z>35)g.position.z-=420;});lamps.forEach(g=>{g.position.z+=travel*2.5;if(g.position.z>25)g.position.z-=434;});traffic.forEach(o=>{o.mesh.position.z+=travel*2.2-o.speed*dt*.22;o.mesh.userData.wheels.forEach(w=>w.rotation.x-=s.speed*dt*.09);if(o.mesh.position.z>14){o.mesh.position.z=-220-Math.random()*100;o.mesh.position.x=[-5.8,0,5.8][Math.floor(Math.random()*3)];o.speed=12+Math.random()*25;}if(Math.abs(o.mesh.position.z)<3.1&&Math.abs(o.mesh.position.x-s.x)<2.05)finish();});if(Math.random()<dt*.12)addTraffic(-260);if(osc&&engine){osc.frequency.setTargetAtTime(48+s.speed*1.15,engine.currentTime,.08);engineGain.gain.setTargetAtTime(.018+s.speed*.00012,engine.currentTime,.1);}document.getElementById('speed').textContent=String(Math.round(s.speed)).padStart(3,'0');document.getElementById('distance').textContent=(s.dist/1000).toFixed(1);document.getElementById('gear').textContent=s.speed<1?'N':s.speed<35?'1':s.speed<70?'2':s.speed<115?'3':s.speed<155?'4':'5';}
-const desired=s.hood?new THREE.Vector3(s.x,2.4,-1.8):new THREE.Vector3(s.x,5.1,11.5);camera.position.lerp(desired,.09);camera.fov=67+Math.min(9,s.speed*.045);camera.updateProjectionMatrix();camera.lookAt(s.hood?new THREE.Vector3(s.x,1.4,-35):new THREE.Vector3(s.x*.45,1.2,-24));player.position.y=.018+Math.sin(now*.012)*Math.min(.035,s.speed*.00018);renderer.render(scene,camera);}
+const desired=s.hood?new THREE.Vector3(s.x,1.53,.12):new THREE.Vector3(s.x,2.85,7.4);camera.position.lerp(desired,s.hood?.22:.12);camera.fov=(s.hood?76:70)+Math.min(7,s.speed*.035);camera.updateProjectionMatrix();camera.lookAt(s.hood?new THREE.Vector3(s.x,1.48,-38):new THREE.Vector3(s.x*.55,1.05,-10));player.position.y=.018+Math.sin(now*.012)*Math.min(.035,s.speed*.00018);renderer.render(scene,camera);}
 requestAnimationFrame(animate);
 })();
 </script></body></html>
